@@ -91,7 +91,7 @@ namespace cv
       CV_Assert(!img.empty());
       char name[1024];
       sprintf(name, "Figure %d", fignum);
-      cv::namedWindow(name, CV_WINDOW_AUTOSIZE);
+      cv::namedWindow(name, WINDOW_AUTOSIZE);
       cv::imshow(name, img);
     }
 

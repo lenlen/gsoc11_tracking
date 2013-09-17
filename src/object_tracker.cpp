@@ -142,8 +142,9 @@ namespace cv
   //---------------------------------------------------------------------------
   bool
   OnlineBoostingAlgorithm::initialize(const cv::Mat & image, const ObjectTrackerParams& params,
-                                      const CvRect& init_bounding_box)
+                                      const cv::Rect& init_bounding_box)
   {
+    cv::boosting::RandomGenerator::initialize((int) time(0));
     // Import the image
     import_image(image);
 
@@ -227,7 +228,7 @@ namespace cv
 
     // Save the new tracking ROI
     track_box = tracker_->getTrackedPatch();
-    std::cout << "\rTracking confidence = " << tracker_->getConfidence();
+    std::cout << "\rTracking confidence = " << tracker_->getConfidence() << std::endl;
 
     // Return success or failure based on whether or not the tracker has been lost
     return !tracker_lost_;
@@ -303,7 +304,7 @@ namespace cv
   //---------------------------------------------------------------------------
   bool
   SemiOnlineBoostingAlgorithm::initialize(const cv::Mat & image, const ObjectTrackerParams& params,
-                                          const CvRect& init_bounding_box)
+                                          const Rect& init_bounding_box)
   {
     // Import the image
     import_image(image);
@@ -388,7 +389,7 @@ namespace cv
 
     // Save the new tracking ROI
     track_box = tracker_->getTrackedPatch();
-    std::cout << "\rTracking confidence = " << tracker_->getConfidence();
+    std::cout << "\rTracking confidence = " << tracker_->getConfidence() << std::endl;
 
     // Return success or failure based on whether or not the tracker has been lost
     return !tracker_lost_;
@@ -457,7 +458,7 @@ namespace cv
   //---------------------------------------------------------------------------
   bool
   OnlineMILAlgorithm::initialize(const cv::Mat & image, const ObjectTrackerParams& params,
-                                 const CvRect& init_bounding_box)
+                                 const Rect& init_bounding_box)
   {
     import_image(image);
 
@@ -568,7 +569,7 @@ namespace cv
   //---------------------------------------------------------------------------
   bool
   LINEMODAlgorithm::initialize(const cv::Mat & image, const ObjectTrackerParams& params,
-                               const CvRect& init_bounding_box)
+                               const Rect& init_bounding_box)
   {
     // Return success
     return true;
@@ -638,7 +639,7 @@ namespace cv
 
   //---------------------------------------------------------------------------
   bool
-  ObjectTracker::initialize(const cv::Mat & image, const CvRect& bounding_box)
+  ObjectTracker::initialize(const cv::Mat & image, const cv::Rect& bounding_box)
   {
     // Initialize the tracker and if it works, set the flag that we're now initialized
     // to true so that update() can work properly.

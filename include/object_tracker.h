@@ -44,10 +44,13 @@
 #define __OPENCV_OBJECT_TRACKER_H__
 
 #include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/types_c.h>
 
 #include "cv_onlineboosting.h"
 #include "cv_onlinemil.h"
 //#include "cv_linemod.h"
+
+using namespace cv;
 
 namespace cv
 {
@@ -59,7 +62,7 @@ namespace cv
   //
   // :TODO: to be filled-in as needed...
   //
-  CV_EXPORTS struct ObjectTrackerParams
+  struct CV_EXPORTS ObjectTrackerParams
   {
     enum
     {
@@ -87,7 +90,7 @@ namespace cv
 
   // The base (abstract) tracking algorithm class, to define the interface
   // for all other specific object tracking algorithm classes.
-  CV_EXPORTS class TrackingAlgorithm
+  class CV_EXPORTS TrackingAlgorithm
   {
   public:
     TrackingAlgorithm();
@@ -95,7 +98,7 @@ namespace cv
     ~TrackingAlgorithm();
 
     virtual bool
-    initialize(const cv::Mat & image, const ObjectTrackerParams& params, const CvRect& init_bounding_box) = 0;
+    initialize(const cv::Mat & image, const ObjectTrackerParams& params, const cv::Rect& init_bounding_box) = 0;
 
     virtual bool
     update(const cv::Mat & image, const ObjectTrackerParams& params, cv::Rect & track_box) = 0;
@@ -120,14 +123,14 @@ namespace cv
   // H. Grabner, M. Grabner, and H. Bischof.  "Real-time Tracking via On-line Boosting", 
   // In Proceedings British Machine Vision Conference (BMVC), volume 1, pages 47-56, 2006.
   //
-  CV_EXPORTS class OnlineBoostingAlgorithm: public TrackingAlgorithm
+  class CV_EXPORTS OnlineBoostingAlgorithm: public TrackingAlgorithm
   {
   public:
     OnlineBoostingAlgorithm();
     ~OnlineBoostingAlgorithm();
 
     virtual bool
-    initialize(const cv::Mat & image, const ObjectTrackerParams& params, const CvRect& init_bounding_box);
+    initialize(const cv::Mat & image, const ObjectTrackerParams& params, const cv::Rect& init_bounding_box);
 
     virtual bool
     update(const cv::Mat & image, const ObjectTrackerParams& params, cv::Rect & track_box);
@@ -162,14 +165,14 @@ namespace cv
   // Robust Tracking", In Proceedings European Conference on Computer Vision (ECCV), 
   // 2008.
   //
-  CV_EXPORTS class SemiOnlineBoostingAlgorithm: public TrackingAlgorithm
+  class CV_EXPORTS SemiOnlineBoostingAlgorithm: public TrackingAlgorithm
   {
   public:
     SemiOnlineBoostingAlgorithm();
     ~SemiOnlineBoostingAlgorithm();
 
     virtual bool
-    initialize(const cv::Mat & image, const ObjectTrackerParams& params, const CvRect& init_bounding_box);
+    initialize(const cv::Mat & image, const ObjectTrackerParams& params, const cv::Rect& init_bounding_box);
 
     virtual bool
     update(const cv::Mat & image, const ObjectTrackerParams& params, cv::Rect & track_box);
@@ -203,14 +206,14 @@ namespace cv
   // B. Babenko, M.H. Yang, and S. Belongie.  "Visual Tracking with Online Multiple 
   // Instance Learning", CVPR 2009, Miami, Florida.
   //
-  CV_EXPORTS class OnlineMILAlgorithm: public TrackingAlgorithm
+  class CV_EXPORTS OnlineMILAlgorithm: public TrackingAlgorithm
   {
   public:
     OnlineMILAlgorithm();
     ~OnlineMILAlgorithm();
 
     virtual bool
-    initialize(const cv::Mat & image, const ObjectTrackerParams& params, const CvRect& init_bounding_box);
+    initialize(const cv::Mat & image, const ObjectTrackerParams& params, const cv::Rect& init_bounding_box);
 
     virtual bool
     update(const cv::Mat & image, const ObjectTrackerParams& params, cv::Rect & track_box);
@@ -242,14 +245,14 @@ namespace cv
   //
   // ... fill-in when paper is accepted and we have permission ...
   //
-  CV_EXPORTS class LINEMODAlgorithm: public TrackingAlgorithm
+  class CV_EXPORTS LINEMODAlgorithm: public TrackingAlgorithm
   {
   public:
     LINEMODAlgorithm();
     ~LINEMODAlgorithm();
 
     virtual bool
-    initialize(const cv::Mat & image, const ObjectTrackerParams& params, const CvRect& init_bounding_box);
+    initialize(const cv::Mat & image, const ObjectTrackerParams& params, const cv::Rect& init_bounding_box);
 
     virtual bool
     update(const cv::Mat & image, const ObjectTrackerParams& params, cv::Rect & track_box);
@@ -270,7 +273,7 @@ namespace cv
   // tracking algorithm to implement, based on the 'algorithm' field
   // in the ObjectTrackerParams.
   //
-  CV_EXPORTS class ObjectTracker
+  class CV_EXPORTS ObjectTracker
   {
   public:
     // Default constructor--performs initializations of the class and memory.
@@ -297,7 +300,7 @@ namespace cv
     // -- Be sure to do boundary checks on 'boundingBox' to account for user error.
     //
     virtual bool
-    initialize(const cv::Mat & image, const CvRect& bounding_box);
+    initialize(const cv::Mat & image, const cv::Rect& bounding_box);
 
     // Update the state of the tracker.  This assumes that initialization has already occurred.
     // If not, false will immediately be returned.  The new tracking bounding box will be 

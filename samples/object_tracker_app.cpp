@@ -9,7 +9,7 @@ main(int argc, char** argv)
 {
   // Setup the parameters to use OnlineBoosting or MILTrack as the underlying tracking algorithm
   cv::ObjectTrackerParams params;
-#if 0
+#if 1
   params.algorithm_ = cv::ObjectTrackerParams::CV_ONLINEBOOSTING;
   //params.algorithm_ = cv::ObjectTrackerParams::CV_SEMIONLINEBOOSTING;
   params.num_classifiers_ = 100;
@@ -35,7 +35,7 @@ main(int argc, char** argv)
 
   // Some book-keeping
   bool is_tracker_initialized = false;
-  CvRect init_bb = cvRect(122, 58, 75, 97); // the initial tracking bounding box
+  Rect init_bb = Rect(122, 58, 75, 97); // the initial tracking bounding box
 
   /* const char* cascade_name = "haarcascade_frontalface_alt_tree.xml";
    const int minsz = 20;
@@ -112,7 +112,7 @@ main(int argc, char** argv)
     }
 
     // Display the tracking box
-    CvScalar box_color;
+    Scalar box_color;
     if (tracker_failed)
     {
       box_color = cv::Scalar(255, 0, 0);
@@ -121,8 +121,9 @@ main(int argc, char** argv)
     {
       box_color = cv::Scalar(255, 255, 0);
     }
-    cv::rectangle(image, cvPoint(theTrack.x, theTrack.y),
-                  cvPoint(theTrack.x + theTrack.width - 1, theTrack.y + theTrack.height - 1), box_color, 2);
+    cv::rectangle(image, Point(theTrack.x, theTrack.y),
+                  Point(theTrack.x + theTrack.width - 1,
+                		  theTrack.y + theTrack.height - 1), box_color, 2);
 
     // Display the new image
     cv::imshow("Tracker Display", image);

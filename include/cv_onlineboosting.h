@@ -49,6 +49,33 @@ namespace cv
 {
   namespace boosting
   {
+  // random generator stuff
+  struct RandomGenerator
+  {
+  public:
+    static
+    void
+    initialize(const int init)
+    {
+      rng_ = cv::RNG(init);
+    }
+
+    static
+    int
+    randint(const int min, const int max)
+    {
+      return rng_.uniform(min, max);
+    }
+
+    static
+    float
+    randfloat(const float min = 0, const float max = 1)
+    {
+      return rng_.uniform(min, max);
+    }
+    static cv::RNG rng_;
+  };
+
     class ImageRepresentation
     {
     public:

@@ -62,6 +62,8 @@ namespace cv
 {
   namespace boosting
   {
+    cv::RNG RandomGenerator::rng_ = cv::RNG();
+
     cv::Rect
     RectMultiply(const cv::Rect & rect, float f)
     {
@@ -188,7 +190,7 @@ namespace cv
       long int value = intSqImage(OriginY + Height, OriginX + Width) + intSqImage(OriginY, OriginX)
           - intSqImage(OriginY, OriginX + Width) - intSqImage(OriginY + Height, OriginX);
 
-      assert(value >= 0);
+      CV_Assert(value >= 0);
 
       return (long) value;
 
@@ -431,7 +433,7 @@ namespace cv
         }
       }
 
-      assert(curPatch==num);
+      CV_Assert(curPatch==num);
     }
 
     PatchesRegularScan::~PatchesRegularScan(void)
@@ -557,7 +559,7 @@ namespace cv
           }
         }
       }
-      assert(curPatch==num);
+      CV_Assert(curPatch==num);
 
     }
 
@@ -682,6 +684,39 @@ namespace cv
       }
     }
 
+    void
+    FeatureHaar::generateRandomFeature(Size patchSize)
+    {
+      m_numAreas = RandomGenerator::randint(2, 5);
+      m_areas.resize(m_numAreas);
+      m_weights.resize(m_numAreas);
+
+      for (int k = 0; k < m_numAreas; k++)
+      {
+        //the weights are computed in m_scaleWeights
+        m_weights[k] = 0;
+        m_areas[k].x = RandomGenerator::randint(0, (uint) (patchSize.width - 3));
+        m_areas[k].y = RandomGenerator::randint(0, (uint) (patchSize.height - 3));
+        m_areas[k].width = RandomGenerator::randint(1, (patchSize.width - m_areas[k].x - 2));
+        m_areas[k].height = RandomGenerator::randint(1, (patchSize.height - m_areas[k].y - 2));
+      }
+
+      m_initMean = 0;
+      m_initSigma = 1;
+
+      m_initSize = patchSize;
+      m_curSize = m_initSize;
+      m_scaleFactorWidth = m_scaleFactorHeight = 1.0f;
+      m_scaleAreas.resize(m_numAreas);
+      m_scaleWeights.resize(m_numAreas);
+      for (int curArea = 0; curArea < m_numAreas; curArea++)
+      {
+        m_scaleAreas[curArea] = m_areas[curArea];
+        m_scaleWeights[curArea] = RandomGenerator::randfloat(-1.f, 1.f);
+      }
+    }
+
+    /*
     void
     FeatureHaar::generateRandomFeature(Size patchSize)
     {
@@ -1104,7 +1139,7 @@ namespace cv
           valid = true;
         }
         else
-          assert(false);
+          CV_Assert(false);
       }
 
       m_initSize = patchSize;
@@ -1118,7 +1153,7 @@ namespace cv
         m_scaleWeights[curArea] = (float) m_weights[curArea]
             / (float) (m_areas[curArea].width * m_areas[curArea].height);
       }
-    }
+    }*/
 
     bool
     FeatureHaar::eval(ImageRepresentation* image, Rect ROI, float* result)
@@ -1518,7 +1553,7 @@ namespace cv
         errors[curWeakClassifier] = m_wWrong[curWeakClassifier]
             / (m_wWrong[curWeakClassifier] + m_wCorrect[curWeakClassifier]);
 
-        assert(errors[curWeakClassifier] > 0);
+        CV_Assert(errors[curWeakClassifier] > 0);
       }
     }
 
@@ -1538,8 +1573,8 @@ namespace cv
         }
       }
 
-      assert(index > -1);
-      assert(index != m_selectedClassifier);
+      CV_Assert(index > -1);
+      CV_Assert(index != m_selectedClassifier);
 
       //replace
       m_idxOfNewWeakClassifier++;
@@ -1567,9 +1602,9 @@ namespace cv
     void
     BaseClassifier::replaceClassifierStatistic(int sourceIndex, int targetIndex)
     {
-      assert(targetIndex >=0);
-      assert(targetIndex != m_selectedClassifier);
-      assert(targetIndex < m_numWeakClassifier);
+      CV_Assert(targetIndex >=0);
+      CV_Assert(targetIndex != m_selectedClassifier);
+      CV_Assert(targetIndex < m_numWeakClassifier);
 
       //replace
       m_wWrong[targetIndex] = m_wWrong[sourceIndex];
@@ -1621,14 +1656,14 @@ namespace cv
     bool
     StrongClassifier::update(ImageRepresentation *image, Rect ROI, int target, float importance)
     {
-      assert(true);
+      CV_Assert(true);
       return false;
     }
 
     bool
     StrongClassifier::updateSemi(ImageRepresentation *image, Rect ROI, float priorConfidence)
     {
-      assert(true);
+      CV_Assert(true);
       return false;
     }
 
